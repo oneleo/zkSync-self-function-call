@@ -7,7 +7,7 @@ import "tsconfig-paths/register"
 import dotenv from "dotenv"
 dotenv.config()
 
-const INFURA_TOKEN = process.env.INFURA_TOKEN || ""
+const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY || ""
 
 module.exports = {
     zksolc: {
@@ -31,13 +31,9 @@ module.exports = {
     defaultNetwork: "zkSyncLocal",
     networks: {
         // which will be specified with the --netowrk tag
-        goerli: {
-            url: `https://goerli.infura.io/v3/${INFURA_TOKEN}`, // The Ethereum Web3 RPC URL (optional).
-            zksync: false, // Set to false to target other networks.
-        },
         zkSyncEraTestnet: {
-            url: "https://testnet.era.zksync.dev", // you should use the URL of the zkSync network RPC
-            ethNetwork: "goerli",
+            url: `https://zksync-sepolia.g.alchemy.com/v2/${ALCHEMY_API_KEY}`, // you should use the URL of the zkSync network RPC
+            ethNetwork: "sepolia",
             zksync: true,
         },
         zkSyncLocal: {

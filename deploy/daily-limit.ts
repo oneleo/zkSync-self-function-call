@@ -1,13 +1,14 @@
 import * as zk from "zksync-web3"
 import * as ethers from "ethers"
-import { HardhatRuntimeEnvironment } from "hardhat/types"
+import { HardhatRuntimeEnvironment, HttpNetworkUserConfig } from "hardhat/types"
 import { Deployer } from "@matterlabs/hardhat-zksync-toolbox"
 
 const ETH_ADDRESS = "0x000000000000000000000000000000000000800A"
 
 export default async function (hre: HardhatRuntimeEnvironment) {
     // Basic Config Setting
-    const provider = new zk.Provider(hre.config.networks.zkSyncLocal.url)
+    const rpcUrl = (hre.config.networks[hre.network.name] as HttpNetworkUserConfig).url
+    const provider = new zk.Provider(rpcUrl as string)
     const testMnemonic =
         "stuff slice staff easily soup parent arm payment cotton trade scatter struggle"
     const zkWallet = zk.Wallet.fromMnemonic(testMnemonic, "m/44'/60'/0'/0/0")
@@ -127,7 +128,9 @@ export default async function (hre: HardhatRuntimeEnvironment) {
 
     // L1 timestamp tends to be undefined in latest blocks. So it should find the latest L1 Batch first.
     let l1BatchRange = await provider.getL1BatchBlockRange(await provider.getL1BatchNumber())
-    let l1TimeStamp = (await provider.getBlock(l1BatchRange[1])).l1BatchTimestamp
+    let l1TimeStamp = l1BatchRange
+        ? (await provider.getBlock(l1BatchRange[1])).l1BatchTimestamp
+        : null
 
     console.log("L1 timestamp: ", l1TimeStamp)
     console.log("Limit will reset on timestamp: ", limitData.resetTime.toString())

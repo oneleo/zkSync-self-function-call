@@ -31,6 +31,20 @@ contract Account is IAccount, IERC1271, SpendLimit {
         owner = _owner;
     }
 
+    uint256 public customVariable = 0;
+
+    function customFunction1() external {
+        customVariable = 1;
+    }
+
+    function customFunction2() external onlyBootloader {
+        customVariable = 2;
+    }
+
+    function customFunction3() external onlyAccount {
+        customVariable = 3;
+    }
+
     function validateTransaction(
         bytes32,
         bytes32 _suggestedSignedHash,
